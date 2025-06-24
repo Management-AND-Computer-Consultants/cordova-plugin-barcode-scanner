@@ -75,6 +75,29 @@ If you encounter other build errors:
 2. Ensure you have the latest Cordova CLI
 3. Check that all dependencies are compatible
 
+### AndroidManifest.xml Conflict
+
+If you see an error like:
+```
+"AndroidManifest.xml" already exists!
+```
+
+**Solution:**
+1. Remove the plugin completely:
+   ```bash
+   cordova plugin remove management-and-computer-consultants-cordova-plugin-barcode-scanner
+   ```
+2. Clean the project:
+   ```bash
+   cordova clean android
+   ```
+3. Re-add the plugin:
+   ```bash
+   cordova plugin add management-and-computer-consultants-cordova-plugin-barcode-scanner
+   ```
+
+This error typically occurs when there's a conflict with existing manifest files and is resolved by a clean reinstall.
+
 ## Verification
 
 To verify the plugin is working:

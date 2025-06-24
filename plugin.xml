@@ -35,9 +35,16 @@
             <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
         </config-file>
         
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+            <activity
+                android:name="com.mccbarcode.BarcodeScannerActivity"
+                android:exported="false"
+                android:screenOrientation="portrait"
+                android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
+        </config-file>
+        
         <source-file src="src/android/BarcodeScannerPlugin.java" target-dir="src/com/mccbarcode" />
         <source-file src="src/android/BarcodeScannerActivity.java" target-dir="src/com/mccbarcode" />
-        <source-file src="src/android/AndroidManifest.xml" target-dir="." />
         <source-file src="src/android/res/layout/activity_barcode_scanner.xml" target-dir="res/layout" />
         
         <framework src="androidx.core:core:1.6.0" />
