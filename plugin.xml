@@ -38,7 +38,6 @@
 
         <source-file src="src/android/BarcodeScannerPlugin.java" target-dir="src/com/managementandcomputerconsultants/barcodescanner" />
         <source-file src="src/android/BarcodeScannerActivity.java" target-dir="src/com/managementandcomputerconsultants/barcodescanner" />
-        <source-file src="src/android/CameraPreview.java" target-dir="src/com/managementandcomputerconsultants/barcodescanner" />
         
         <framework src="androidx.core:core:1.6.0" />
         <framework src="androidx.camera:camera-core:1.2.0" />
