@@ -1,0 +1,62 @@
+{
+  "name": "@management-and-computer-consultants/cordova-plugin-barcode-scanner",
+  "version": "1.0.0",
+  "description": "A comprehensive barcode scanner plugin for Cordova supporting multiple 1D and 2D barcode formats",
+  "main": "www/BarcodeScanner.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublishOnly": "echo \"Preparing package for npm publish...\""
+  },
+  "cordova": {
+    "id": "management-and-computer-consultants-cordova-plugin-barcode-scanner",
+    "platforms": [
+      "android"
+    ]
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android",
+    "barcode",
+    "scanner",
+    "qr-code",
+    "datamatrix",
+    "pdf417",
+    "ean",
+    "upc",
+    "code128",
+    "code39",
+    "camera",
+    "mcc",
+    "management-and-computer-consultants",
+    "cordova-plugin"
+  ],
+  "author": {
+    "name": "Management and Computer Consultants",
+    "url": "https://github.com/Management-AND-Computer-Consultants"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Management-AND-Computer-Consultants/cordova-plugin-barcode-scanner.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Management-AND-Computer-Consultants/cordova-plugin-barcode-scanner/issues"
+  },
+  "homepage": "https://github.com/Management-AND-Computer-Consultants/cordova-plugin-barcode-scanner#readme",
+  "engines": {
+    "cordova": ">=9.0.0",
+    "cordova-android": ">=10.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "www/",
+    "src/",
+    "plugin.xml",
+    "README.md",
+    "LICENSE",
+    "PLUGIN_STRUCTURE.md",
+    "example/"
+  ]
+} 

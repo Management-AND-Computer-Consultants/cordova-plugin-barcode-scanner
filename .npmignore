@@ -1,0 +1,42 @@
+# Development files
+.git/
+.gitignore
+.npmignore
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Build artifacts
+*.log
+*.tmp
+*.temp
+
+# Documentation (optional - you might want to include these)
+# docs/
+# *.md (except README.md which is included)
+
+# Test files
+test/
+tests/
+*.test.js
+*.spec.js
+
+# Example files (optional - you might want to include these)
+# example/ 

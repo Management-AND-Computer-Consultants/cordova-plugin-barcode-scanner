@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    id="management-and-computer-consultants-cordova-plugin-barcode-scanner"
+    version="1.0.0">
+    
+    <name>Custom Barcode Scanner</name>
+    <description>A comprehensive barcode scanner plugin for Cordova supporting multiple 1D and 2D barcode formats</description>
+    <license>MIT</license>
+    <keywords>cordova,barcode,scanner,qr-code,datamatrix,pdf417,ean,upc,code128,code39</keywords>
+    <repo>https://github.com/Management-AND-Computer-Consultants/cordova-plugin-barcode-scanner</repo>
+    <issue>https://github.com/Management-AND-Computer-Consultants/cordova-plugin-barcode-scanner/issues</issue>
+
+    <engines>
+        <engine name="cordova" version=">=9.0.0"/>
+        <engine name="cordova-android" version=">=10.0.0" />
+    </engines>
+
+    <js-module src="www/BarcodeScanner.js" name="BarcodeScanner">
+        <clobbers target="BarcodeScanner" />
+    </js-module>
+
+    <!-- Android Platform -->
+    <platform name="android">
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="BarcodeScanner">
+                <param name="android-package" value="com.managementandcomputerconsultants.barcodescanner.BarcodeScannerPlugin"/>
+            </feature>
+        </config-file>
+        
+        <config-file target="AndroidManifest.xml" parent="/*">
+            <uses-permission android:name="android.permission.CAMERA" />
+            <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+            <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+            <uses-feature android:name="android.hardware.camera" android:required="true" />
+            <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
+        </config-file>
+
+        <source-file src="src/android/BarcodeScannerPlugin.java" target-dir="src/com/managementandcomputerconsultants/barcodescanner" />
+        <source-file src="src/android/BarcodeScannerActivity.java" target-dir="src/com/managementandcomputerconsultants/barcodescanner" />
+        <source-file src="src/android/CameraPreview.java" target-dir="src/com/managementandcomputerconsultants/barcodescanner" />
+        
+        <framework src="androidx.core:core:1.6.0" />
+        <framework src="androidx.camera:camera-core:1.2.0" />
+        <framework src="androidx.camera:camera-camera2:1.2.0" />
+        <framework src="androidx.camera:camera-lifecycle:1.2.0" />
+        <framework src="androidx.camera:camera-view:1.2.0" />
+        <framework src="com.google.android.gms:play-services-mlkit-barcode-scanning:17.2.0" />
+        
+        <preference name="ANDROIDX_CORE_VERSION" default="1.6.0"/>
+        <preference name="ANDROIDX_CAMERA_CORE_VERSION" default="1.2.0"/>
+        <preference name="ANDROIDX_CAMERA_CAMERA2_VERSION" default="1.2.0"/>
+        <preference name="ANDROIDX_CAMERA_LIFECYCLE_VERSION" default="1.2.0"/>
+        <preference name="ANDROIDX_CAMERA_VIEW_VERSION" default="1.2.0"/>
+        <preference name="PLAY_SERVICES_MLKIT_BARCODE_VERSION" default="17.2.0"/>
+    </platform>
+
+</plugin> 
