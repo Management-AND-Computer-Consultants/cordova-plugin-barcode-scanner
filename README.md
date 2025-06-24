@@ -511,6 +511,30 @@ Enable debug logging by checking the Android logcat:
 adb logcat | grep BarcodeScanner
 ```
 
+### ML Kit Dependency Issues
+
+If you encounter build errors related to ML Kit dependencies, ensure your project's `platforms/android/build.gradle` file includes the Google Maven repository:
+
+```gradle
+allprojects {
+    repositories {
+        google()  // Add this line if missing
+        mavenCentral()
+        // ... other repositories
+    }
+}
+```
+
+**Note:** This plugin uses ML Kit barcode scanning version 16.2.0, which is compatible with Ionic 1 AngularJS projects.
+
+### Android API Level
+
+This plugin requires Android API level 21 or higher. Make sure your project's `config.xml` includes:
+
+```xml
+<preference name="android-minSdkVersion" value="21" />
+```
+
 ## License
 
 MIT License - see LICENSE file for details.

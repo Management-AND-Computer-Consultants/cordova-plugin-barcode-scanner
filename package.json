@@ -1,6 +1,6 @@
 {
   "name": "@management-and-computer-consultants/cordova-plugin-barcode-scanner",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A comprehensive barcode scanner plugin for Cordova supporting multiple 1D and 2D barcode formats",
   "main": "www/BarcodeScanner.js",
   "scripts": {
