@@ -2,9 +2,9 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
     xmlns:android="http://schemas.android.com/apk/res/android"
     id="management-and-computer-consultants-cordova-plugin-barcode-scanner"
-    version="1.0.0">
+    version="1.0.5">
     
-    <name>Custom Barcode Scanner</name>
+    <name>Barcode Scanner</name>
     <description>A comprehensive barcode scanner plugin for Cordova supporting multiple 1D and 2D barcode formats</description>
     <license>MIT</license>
     <keywords>cordova,barcode,scanner,qr-code,datamatrix,pdf417,ean,upc,code128,code39</keywords>
@@ -12,12 +12,12 @@
     <issue>https://github.com/Management-AND-Computer-Consultants/cordova-plugin-barcode-scanner/issues</issue>
 
     <engines>
-        <engine name="cordova" version=">=9.0.0"/>
-        <engine name="cordova-android" version=">=10.0.0" />
+        <engine name="cordova" version=">=3.0.0"/>
+        <engine name="cordova-android" version=">=3.6.0" />
     </engines>
 
-    <js-module src="www/BarcodeScanner.js" name="BarcodeScanner">
-        <clobbers target="BarcodeScanner" />
+    <js-module src="www/barcodescanner.js" name="BarcodeScanner">
+        <clobbers target="navigator.barcodeScanner" />
     </js-module>
 
     <!-- Android Platform -->
@@ -25,6 +25,7 @@
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="BarcodeScanner">
                 <param name="android-package" value="com.mccbarcode.BarcodeScannerPlugin" />
+                <param name="onload" value="true"/>
             </feature>
         </config-file>
         
@@ -47,21 +48,43 @@
         <source-file src="src/android/BarcodeScannerActivity.java" target-dir="src/com/mccbarcode" />
         <source-file src="src/android/res/layout/activity_barcode_scanner.xml" target-dir="res/layout" />
         
-        <framework src="androidx.core:core:1.6.0" />
-        <framework src="androidx.camera:camera-core:1.3.0" />
-        <framework src="androidx.camera:camera-camera2:1.3.0" />
-        <framework src="androidx.camera:camera-lifecycle:1.3.0" />
-        <framework src="androidx.camera:camera-view:1.3.0" />
-        <framework src="com.google.mlkit:barcode-scanning:16.2.0" />
+        <!-- Use older, more compatible versions for Ionic 1 -->
+        <framework src="androidx.core:core:1.3.0" />
+        <framework src="androidx.camera:camera-core:1.0.0" />
+        <framework src="androidx.camera:camera-camera2:1.0.0" />
+        <framework src="androidx.camera:camera-lifecycle:1.0.0" />
+        <framework src="androidx.camera:camera-view:1.0.0" />
+        <framework src="com.google.mlkit:barcode-scanning:16.1.0" />
         
-        <preference name="ANDROIDX_CORE_VERSION" default="1.6.0"/>
-        <preference name="ANDROIDX_CAMERA_CORE_VERSION" default="1.3.0"/>
-        <preference name="ANDROIDX_CAMERA_CAMERA2_VERSION" default="1.3.0"/>
-        <preference name="ANDROIDX_CAMERA_LIFECYCLE_VERSION" default="1.3.0"/>
-        <preference name="ANDROIDX_CAMERA_VIEW_VERSION" default="1.3.0"/>
-        <preference name="MLKIT_BARCODE_VERSION" default="16.2.0"/>
+        <preference name="ANDROIDX_CORE_VERSION" default="1.3.0"/>
+        <preference name="ANDROIDX_CAMERA_CORE_VERSION" default="1.0.0"/>
+        <preference name="ANDROIDX_CAMERA_CAMERA2_VERSION" default="1.0.0"/>
+        <preference name="ANDROIDX_CAMERA_LIFECYCLE_VERSION" default="1.0.0"/>
+        <preference name="ANDROIDX_CAMERA_VIEW_VERSION" default="1.0.0"/>
+        <preference name="MLKIT_BARCODE_VERSION" default="16.1.0"/>
+    </platform>
+
+    <!-- iOS Platform -->
+    <platform name="ios">
+        <config-file target="config.xml" parent="/*">
+            <feature name="BarcodeScanner">
+                <param name="ios-package" value="CDVBarcodeScanner"/>
+                <param name="onload" value="true"/>
+            </feature>
+        </config-file>
         
-        <!-- Note: Make sure your project's build.gradle includes google() in the repositories section -->
+        <header-file src="src/ios/CDVBarcodeScanner.h" />
+        <source-file src="src/ios/CDVBarcodeScanner.m" />
+        
+        <framework src="AVFoundation.framework" />
+        <framework src="CoreGraphics.framework" />
+    </platform>
+
+    <!-- Browser Platform -->
+    <platform name="browser">
+        <js-module src="src/browser/BarcodeScannerProxy.js" name="BarcodeScannerProxy">
+            <runs />
+        </js-module>
     </platform>
 
 </plugin> 

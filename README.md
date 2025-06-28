@@ -1,64 +1,72 @@
-# Management and Computer Consultants Cordova Plugin Barcode Scanner
+# Cordova Barcode Scanner Plugin
 
-A comprehensive barcode scanner plugin for Cordova supporting multiple 1D and 2D barcode formats with modern API.
-
-## Features
-
-- **Comprehensive barcode format support** including 1D and 2D formats
-- **Modern API** with flexible configuration options
-- **CameraX integration** for modern Android camera handling
-- **Google ML Kit** for accurate barcode detection
-- **Real-time camera preview** with customizable detection area
-- **Audio and haptic feedback** options
-- **Multiple resolution support** from 480P to 4K
-- **Torch and zoom controls** for enhanced scanning
-
-## Installation
-
-### Via npm (Recommended)
-
-```bash
-npm install @management-and-computer-consultants/cordova-plugin-barcode-scanner
-```
-
-### Via Cordova CLI
-
-```bash
-cordova plugin add @management-and-computer-consultants/cordova-plugin-barcode-scanner
-```
-
-### Manual Installation
-
-```bash
-cordova plugin add https://github.com/Management-AND-Computer-Consultants/cordova-plugin-barcode-scanner.git
-```
-
-## Requirements
-
-- Cordova 9.0.0 or higher
-- Cordova Android 10.0.0 or higher
-- Android SDK 35 (API Level 35) or higher
+A comprehensive barcode scanner plugin for Cordova supporting multiple 1D and 2D barcode formats, optimized for Data Matrix scanning.
 
 ## Features
 
 - **Data Matrix Focus**: Optimized for Data Matrix barcode scanning
+- **Multiple Formats**: Supports QR Code, Code 128, Code 39, EAN-13, UPC-A, PDF417, and more
 - **Real-time Detection**: Live camera preview with instant barcode recognition
 - **Camera Controls**: Torch/flashlight, zoom, and focus controls
 - **Multiple Resolutions**: Support for various camera resolutions
 - **Permission Handling**: Automatic camera permission requests
-- **Modern UI**: Clean, user-friendly scanning interface
-- **Vibration Feedback**: Haptic feedback when barcode is detected
+- **Cross-platform**: Android, iOS, and Browser support
+- **Ionic 1 Compatible**: Works with Ionic 1/AngularJS projects
 
 ## Supported Barcode Formats
 
-- **Data Matrix** (Primary focus)
-- QR Code
-- Code 128
+### 1D Barcodes
+- Code 11
 - Code 39
-- EAN-13
+- Code 93
+- Code 128
+- Codabar
 - EAN-8
+- EAN-13
 - UPC-A
 - UPC-E
+- Interleaved 2 of 5 (ITF)
+- Industrial 2 of 5
+- ITF-14
+
+### 2D Barcodes
+- **Data Matrix** (Primary focus)
+- QR Code
+- PDF417
+- GS1 DataBar
+- Maxicode
+- Micro PDF417
+- Micro QR
+- Patch Code
+- GS1 Composite
+- Aztec
+
+### Special Formats
+- Postal Code
+- Dot Code
+- PharmaCode
+
+## Installation
+
+### Prerequisites
+
+- Cordova 3.0.0 or higher
+- Cordova Android 3.6.0 or higher
+- Cordova iOS 3.6.0 or higher (for iOS support)
+
+### Install the Plugin
+
+```bash
+# Add the plugin to your Cordova project
+cordova plugin add @management-and-computer-consultants/cordova-plugin-barcode-scanner
+
+# Or install from a local directory
+cordova plugin add /path/to/management-and-computer-consultants-cordova-plugin-barcode-scanner
+```
+
+### For Ionic 1 Projects
+
+See the detailed [Ionic 1 Installation Guide](IONIC1_INSTALLATION.md) for specific instructions.
 
 ## Usage
 
@@ -66,108 +74,25 @@ cordova plugin add https://github.com/Management-AND-Computer-Consultants/cordov
 
 ```javascript
 // Initialize the scanner
-cordova.plugins.mccbarcode.barcodeScanner.init('', function() {
+navigator.barcodeScanner.init('', function() {
     console.log('Scanner initialized');
 }, function(error) {
-    console.error('Initialization failed:', error);
+    console.error('Init failed:', error);
 });
 
-// Scan with default options
-cordova.plugins.mccbarcode.barcodeScanner.scan({}, function(result) {
-    console.log('Barcode detected:', result.text);
-    console.log('Format:', result.format);
-}, function(error) {
-    console.error('Scan failed:', error);
-});
-```
-
-### Modern API Usage
-
-```javascript
-// Define scanning options
-const defaultOptions = {
+// Scan for Data Matrix barcodes
+navigator.barcodeScanner.scan({
     barcodeFormats: {
-        Code128: true,
-        Code39: true,
-        Code93: true,
-        CodaBar: true,
         DataMatrix: true,
-        EAN13: true,
-        EAN8: true,
-        ITF: true,
         QRCode: true,
-        UPCA: true,
-        UPCE: true,
-        PDF417: true,
-        Aztec: true,
+        Code128: true
     },
-    beepOnSuccess: false,
-    vibrateOnSuccess: false,
-    detectorSize: 0.6,
-    rotateCamera: false,
-};
-
-// Scan with custom options
-cordova.plugins.mccbarcode.barcodeScanner.scan(
-    defaultOptions,
-    (result) => {
-        // Do something with the data
-        console.log("result : ", result);
-        console.log("Barcode text: ", result.text);
-        console.log("Barcode format: ", result.format);
-    },
-    (error) => {
-        alert("Scanning failed: " + error);
-    }
-);
-```
-
-### Scanning Different Barcode Formats
-
-```javascript
-// Scan for specific formats only
-cordova.plugins.mccbarcode.barcodeScanner.scan({
-    barcodeFormats: {
-        QRCode: true,
-        DataMatrix: true,
-        Code128: false,
-        Code39: false
-    },
-    beepOnSuccess: true,
-    vibrateOnSuccess: true
+    vibrateOnSuccess: true,
+    torch: false,
+    timeout: 30000
 }, function(result) {
-    console.log('Detected:', result.text, 'Format:', result.format);
-}, function(error) {
-    console.error('Scan failed:', error);
-});
-
-// Scan for retail barcodes
-cordova.plugins.mccbarcode.barcodeScanner.scan({
-    barcodeFormats: {
-        EAN13: true,
-        EAN8: true,
-        UPCA: true,
-        UPCE: true
-    },
-    detectorSize: 0.8,
-    torch: true
-}, function(result) {
-    console.log('Retail barcode:', result.text);
-}, function(error) {
-    console.error('Scan failed:', error);
-});
-
-// Scan for industrial barcodes
-cordova.plugins.mccbarcode.barcodeScanner.scan({
-    barcodeFormats: {
-        Code128: true,
-        Code39: true,
-        ITF: true
-    },
-    beepOnSuccess: true,
-    vibrateOnSuccess: true
-}, function(result) {
-    console.log('Industrial barcode:', result.text);
+    console.log('Barcode detected:', result.barcodeText);
+    console.log('Format:', result.barcodeFormat);
 }, function(error) {
     console.error('Scan failed:', error);
 });
@@ -177,21 +102,23 @@ cordova.plugins.mccbarcode.barcodeScanner.scan({
 
 ```javascript
 // Custom scanning options
-cordova.plugins.mccbarcode.barcodeScanner.scan({
+navigator.barcodeScanner.scan({
     barcodeFormats: {
-        QRCode: true,
         DataMatrix: true,
-        Code128: true
+        QRCode: false,
+        Code128: true,
+        Code39: true
     },
-    resolution: '1080P',
-    torch: true,
-    beepOnSuccess: true,
+    beepOnSuccess: false,
     vibrateOnSuccess: true,
-    detectorSize: 0.8,
+    detectorSize: 0.7,
+    rotateCamera: false,
+    torch: true,
+    resolution: '1080P',
     timeout: 60000
 }, function(result) {
     // Handle successful scan
-    alert('Detected: ' + result.text);
+    alert('Detected: ' + result.barcodeText);
 }, function(error) {
     // Handle error
     alert('Scan failed: ' + error);
@@ -202,12 +129,10 @@ cordova.plugins.mccbarcode.barcodeScanner.scan({
 
 ```javascript
 // Start continuous scanning
-cordova.plugins.mccbarcode.barcodeScanner.startScanning({
+navigator.barcodeScanner.startScanning({
     barcodeFormats: {
-        QRCode: true,
         DataMatrix: true
     },
-    beepOnSuccess: true,
     vibrateOnSuccess: true
 }, function(result) {
     // Called each time a barcode is detected
@@ -217,7 +142,7 @@ cordova.plugins.mccbarcode.barcodeScanner.startScanning({
 });
 
 // Stop continuous scanning
-cordova.plugins.mccbarcode.barcodeScanner.stopScanning(function() {
+navigator.barcodeScanner.stopScanning(function() {
     console.log('Scanning stopped');
 }, function(error) {
     console.error('Error stopping scan:', error);
@@ -228,21 +153,21 @@ cordova.plugins.mccbarcode.barcodeScanner.stopScanning(function() {
 
 ```javascript
 // Toggle torch/flashlight
-cordova.plugins.mccbarcode.barcodeScanner.switchTorch(true, function() {
+navigator.barcodeScanner.switchTorch(true, function() {
     console.log('Torch turned on');
 }, function(error) {
     console.error('Torch error:', error);
 });
 
 // Set camera zoom
-cordova.plugins.mccbarcode.barcodeScanner.setZoom(2.0, function() {
+navigator.barcodeScanner.setZoom(2.0, function() {
     console.log('Zoom set to 2x');
 }, function(error) {
     console.error('Zoom error:', error);
 });
 
 // Set focus point
-cordova.plugins.mccbarcode.barcodeScanner.setFocus({x: 0.5, y: 0.5}, function() {
+navigator.barcodeScanner.setFocus({x: 0.5, y: 0.5}, function() {
     console.log('Focus set to center');
 }, function(error) {
     console.error('Focus error:', error);
@@ -253,7 +178,7 @@ cordova.plugins.mccbarcode.barcodeScanner.setFocus({x: 0.5, y: 0.5}, function() 
 
 ```javascript
 // Check camera permissions
-cordova.plugins.mccbarcode.barcodeScanner.checkPermissions(function(hasPermission) {
+navigator.barcodeScanner.checkPermissions(function(hasPermission) {
     if (hasPermission) {
         console.log('Camera permission granted');
     } else {
@@ -264,7 +189,7 @@ cordova.plugins.mccbarcode.barcodeScanner.checkPermissions(function(hasPermissio
 });
 
 // Request camera permissions
-cordova.plugins.mccbarcode.barcodeScanner.requestPermissions(function() {
+navigator.barcodeScanner.requestPermissions(function() {
     console.log('Permissions granted');
 }, function(error) {
     console.error('Permission request failed:', error);
@@ -275,7 +200,7 @@ cordova.plugins.mccbarcode.barcodeScanner.requestPermissions(function() {
 
 ```javascript
 // Check if device has camera
-cordova.plugins.mccbarcode.barcodeScanner.hasCamera(function(hasCamera) {
+navigator.barcodeScanner.hasCamera(function(hasCamera) {
     if (hasCamera) {
         console.log('Device has camera');
     } else {
@@ -286,18 +211,15 @@ cordova.plugins.mccbarcode.barcodeScanner.hasCamera(function(hasCamera) {
 });
 
 // Get current camera resolution
-cordova.plugins.mccbarcode.barcodeScanner.getResolution(function(resolution) {
+navigator.barcodeScanner.getResolution(function(resolution) {
     console.log('Current resolution:', resolution); // e.g., "1280x720"
 }, function(error) {
     console.error('Resolution check failed:', error);
 });
 
 // Decode barcode from base64 image
-cordova.plugins.mccbarcode.barcodeScanner.decode(base64ImageData, {
-    barcodeFormats: {
-        QRCode: true,
-        DataMatrix: true
-    }
+navigator.barcodeScanner.decode(base64ImageData, {
+    barcodeFormats: {DataMatrix: true}
 }, function(result) {
     console.log('Decoded barcode:', result);
 }, function(error) {
@@ -307,93 +229,25 @@ cordova.plugins.mccbarcode.barcodeScanner.decode(base64ImageData, {
 
 ## API Reference
 
-### cordova.plugins.mccbarcode.barcodeScanner Object
+### BarcodeScanner Object
 
-#### Default Options
+#### Constants
 
-```javascript
-BarcodeScanner.DefaultOptions = {
-    barcodeFormats: {
-        Code128: true,
-        Code39: true,
-        Code93: true,
-        CodaBar: true,
-        DataMatrix: true,
-        EAN13: true,
-        EAN8: true,
-        ITF: true,
-        QRCode: true,
-        UPCA: true,
-        UPCE: true,
-        PDF417: true,
-        Aztec: true,
-        // Additional formats
-        Code11: false,
-        Industrial2Of5: false,
-        ITF14: false,
-        GS1DataBar: false,
-        Maxicode: false,
-        MicroPDF417: false,
-        MicroQR: false,
-        PatchCode: false,
-        GS1Composite: false,
-        PostalCode: false,
-        DotCode: false,
-        PharmaCode: false
-    },
-    beepOnSuccess: false,
-    vibrateOnSuccess: false,
-    detectorSize: 0.6,
-    rotateCamera: false,
-    torch: false,
-    resolution: 'AUTO', // AUTO, 480P, 720P, 1080P, 2K, 4K
-    timeout: 30000
-};
-```
+- `navigator.barcodeScanner.BarcodeFormat.DATA_MATRIX` - Data Matrix format
+- `navigator.barcodeScanner.BarcodeFormat.QR_CODE` - QR Code format
+- `navigator.barcodeScanner.BarcodeFormat.CODE_128` - Code 128 format
+- `navigator.barcodeScanner.BarcodeFormat.CODE_39` - Code 39 format
+- `navigator.barcodeScanner.BarcodeFormat.EAN_13` - EAN-13 format
+- `navigator.barcodeScanner.BarcodeFormat.EAN_8` - EAN-8 format
+- `navigator.barcodeScanner.BarcodeFormat.UPC_A` - UPC-A format
+- `navigator.barcodeScanner.BarcodeFormat.UPC_E` - UPC-E format
 
-#### Scanning Options
-
-- `barcodeFormats` - Object specifying which barcode formats to scan for
-- `beepOnSuccess` - Play beep sound on successful scan (boolean)
-- `vibrateOnSuccess` - Vibrate device on successful scan (boolean)
-- `detectorSize` - Size of detection area (0.0 to 1.0, default: 0.6)
-- `rotateCamera` - Rotate camera 180 degrees (boolean)
-- `torch` - Enable torch/flashlight (boolean)
-- `resolution` - Camera resolution (string: AUTO, 480P, 720P, 1080P, 2K, 4K)
-- `timeout` - Scan timeout in milliseconds (number)
-
-#### Supported Barcode Formats
-
-**1D Barcode Formats:**
-- `Code11` - Code 11 format
-- `Code39` - Code 39 format
-- `Code93` - Code 93 format
-- `Code128` - Code 128 format
-- `CodaBar` - Codabar format
-- `EAN8` - EAN-8 format
-- `EAN13` - EAN-13 format
-- `UPCA` - UPC-A format
-- `UPCE` - UPC-E format
-- `ITF` - Interleaved 2 of 5 (ITF)
-- `Industrial2Of5` - Industrial 2 of 5
-- `ITF14` - ITF-14 format
-
-**2D Barcode Formats:**
-- `QRCode` - QR Code format
-- `DataMatrix` - Data Matrix format
-- `PDF417` - PDF417 format
-- `GS1DataBar` - GS1 DataBar format
-- `Maxicode` - Maxicode format
-- `MicroPDF417` - Micro PDF417 format
-- `MicroQR` - Micro QR format
-- `PatchCode` - Patch Code format
-- `GS1Composite` - GS1 Composite format
-
-**Special Formats:**
-- `PostalCode` - Postal Code format
-- `DotCode` - Dot Code format
-- `PharmaCode` - PharmaCode format
-- `Aztec` - Aztec format
+- `navigator.barcodeScanner.Resolution.AUTO` - Automatic resolution
+- `navigator.barcodeScanner.Resolution.RESOLUTION_480P` - 480p resolution
+- `navigator.barcodeScanner.Resolution.RESOLUTION_720P` - 720p resolution
+- `navigator.barcodeScanner.Resolution.RESOLUTION_1080P` - 1080p resolution
+- `navigator.barcodeScanner.Resolution.RESOLUTION_2K` - 2K resolution
+- `navigator.barcodeScanner.Resolution.RESOLUTION_4K` - 4K resolution
 
 #### Methods
 
@@ -413,39 +267,38 @@ BarcodeScanner.DefaultOptions = {
 - `checkPermissions(successCallback, errorCallback)` - Check permissions
 - `destroy(successCallback, errorCallback)` - Destroy scanner instance
 
-#### Result Object
+## Platform Support
 
-The success callback receives a result object with the following properties:
+### Android
+- Uses CameraX for modern camera handling
+- Google ML Kit for barcode detection
+- Supports all barcode formats
+- Camera controls (torch, zoom, focus)
+- Permission handling
 
-```javascript
-{
-    text: "barcode content",
-    format: "detected format name",
-    success: true
-}
-```
+### iOS
+- Basic implementation provided
+- Full implementation coming soon
+- Uses AVFoundation framework
 
-## Error Handling
-
-The plugin provides comprehensive error handling for various scenarios:
-
-- Camera permission denied
-- Device doesn't have camera
-- Scanner not initialized
-- Scan timeout
-- Camera initialization failure
-- ML Kit processing errors
+### Browser
+- Mock implementation for development
+- Returns appropriate error messages
+- Useful for testing app logic
 
 ## Dependencies
 
 ### Android Dependencies
+- androidx.core:core:1.3.0
+- androidx.camera:camera-core:1.0.0
+- androidx.camera:camera-camera2:1.0.0
+- androidx.camera:camera-lifecycle:1.0.0
+- androidx.camera:camera-view:1.0.0
+- com.google.mlkit:barcode-scanning:16.1.0
 
-- `androidx.core:core:1.6.0`
-- `androidx.camera:camera-core:1.2.0`
-- `androidx.camera:camera-camera2:1.2.0`
-- `androidx.camera:camera-lifecycle:1.2.0`
-- `androidx.camera:camera-view:1.2.0`
-- `com.google.android.gms:play-services-mlkit-barcode-scanning:17.2.0`
+### iOS Dependencies
+- AVFoundation.framework
+- CoreGraphics.framework
 
 ## Building and Testing
 
@@ -473,7 +326,7 @@ cd test-project
 cordova platform add android
 
 # Add the plugin
-cordova plugin add https://github.com/Management-AND-Computer-Consultants/cordova-plugin-barcode-scanner.git
+cordova plugin add ../management-and-computer-consultants-cordova-plugin-barcode-scanner
 
 # Build and run
 cordova build android
@@ -484,22 +337,26 @@ cordova run android
 
 ### Common Issues
 
-1. **Camera Permission Denied**
-   - Ensure the app has camera permissions
-   - Use `BarcodeScanner.requestPermissions()` to request permissions
+1. **Plugin not found**
+   - Ensure you're using the correct plugin ID: `management-and-computer-consultants-cordova-plugin-barcode-scanner`
+   - Check that the plugin is properly installed with `cordova plugin list`
 
-2. **Scanner Not Initialized**
-   - Call `BarcodeScanner.init()` before scanning
+2. **Camera Permission Denied**
+   - Ensure the app has camera permissions
+   - Use `navigator.barcodeScanner.requestPermissions()` to request permissions
+
+3. **Scanner Not Initialized**
+   - Call `navigator.barcodeScanner.init()` before scanning
    - Check for initialization errors
 
-3. **No Barcode Detected**
+4. **No Barcode Detected**
    - Ensure the barcode is clearly visible
    - Try different lighting conditions
    - Use torch if available
    - Check if the barcode format is supported
 
-4. **Build Errors**
-   - Ensure Android SDK 35+ is installed
+5. **Build Errors**
+   - Ensure Android SDK is properly configured
    - Check that all dependencies are properly configured
    - Verify Cordova and platform versions
 
@@ -509,30 +366,6 @@ Enable debug logging by checking the Android logcat:
 
 ```bash
 adb logcat | grep BarcodeScanner
-```
-
-### ML Kit Dependency Issues
-
-If you encounter build errors related to ML Kit dependencies, ensure your project's `platforms/android/build.gradle` file includes the Google Maven repository:
-
-```gradle
-allprojects {
-    repositories {
-        google()  // Add this line if missing
-        mavenCentral()
-        // ... other repositories
-    }
-}
-```
-
-**Note:** This plugin uses ML Kit barcode scanning version 16.2.0, which is compatible with Ionic 1 AngularJS projects.
-
-### Android API Level
-
-This plugin requires Android API level 21 or higher. Make sure your project's `config.xml` includes:
-
-```xml
-<preference name="android-minSdkVersion" value="21" />
 ```
 
 ## License
@@ -552,10 +385,18 @@ MIT License - see LICENSE file for details.
 For issues and questions:
 
 1. Check the troubleshooting section
-2. Search existing issues
-3. Create a new issue with detailed information
+2. Review the [Ionic 1 Installation Guide](IONIC1_INSTALLATION.md) for Ionic 1 specific issues
+3. Search existing issues
+4. Create a new issue with detailed information
 
 ## Changelog
+
+### Version 1.0.4
+- Fixed plugin ID for Ionic 1 compatibility
+- Lowered engine requirements for older Cordova versions
+- Updated JavaScript interface to use `navigator.barcodeScanner`
+- Added browser and iOS platform support
+- Improved error handling and documentation
 
 ### Version 1.0.0
 - Initial release

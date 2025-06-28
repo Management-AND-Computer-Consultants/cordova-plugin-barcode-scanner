@@ -1,22 +1,38 @@
-/**
- * Comprehensive Barcode Scanner Plugin for Cordova
- * Supports multiple 1D and 2D barcode formats with modern API
- */
+/*
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ *
+*/
 
 var exec = require('cordova/exec');
 
 /**
  * Barcode Scanner Plugin
- * @namespace cordova.plugins.mccbarcode.barcodeScanner
+ * @namespace navigator.barcodeScanner
  */
-var BarcodeScanner = {};
+var barcodeScanner = {};
 
 /**
  * Barcode format constants
  * @readonly
  * @enum {string}
  */
-BarcodeScanner.BarcodeFormat = {
+barcodeScanner.BarcodeFormat = {
     // 1D Barcode Formats
     CODE_11: 'Code11',
     CODE_39: 'Code39',
@@ -52,11 +68,25 @@ BarcodeScanner.BarcodeFormat = {
 };
 
 /**
+ * Camera resolution options
+ * @readonly
+ * @enum {string}
+ */
+barcodeScanner.Resolution = {
+    AUTO: 'AUTO',
+    RESOLUTION_480P: '480P',
+    RESOLUTION_720P: '720P',
+    RESOLUTION_1080P: '1080P',
+    RESOLUTION_2K: '2K',
+    RESOLUTION_4K: '4K'
+};
+
+/**
  * Default scanning options
  * @readonly
  * @type {Object}
  */
-BarcodeScanner.DefaultOptions = {
+barcodeScanner.DefaultOptions = {
     barcodeFormats: {
         Code128: true,
         Code39: true,
@@ -86,12 +116,22 @@ BarcodeScanner.DefaultOptions = {
         PharmaCode: false
     },
     beepOnSuccess: false,
-    vibrateOnSuccess: false,
+    vibrateOnSuccess: true,
     detectorSize: 0.6,
     rotateCamera: false,
     torch: false,
-    resolution: 'AUTO', // AUTO, 480P, 720P, 1080P, 2K, 4K
+    resolution: 'AUTO',
     timeout: 30000
+};
+
+/**
+ * Initialize the barcode scanner
+ * @param {string} license - License key (optional for basic functionality)
+ * @param {Function} successCallback - Success callback function
+ * @param {Function} errorCallback - Error callback function
+ */
+barcodeScanner.init = function(license, successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "BarcodeScanner", "init", [license || '']);
 };
 
 /**
@@ -108,26 +148,16 @@ BarcodeScanner.DefaultOptions = {
  * @param {Function} successCallback - Success callback function
  * @param {Function} errorCallback - Error callback function
  */
-BarcodeScanner.scan = function(options, successCallback, errorCallback) {
+barcodeScanner.scan = function(options, successCallback, errorCallback) {
     // Merge with default options
-    var scanOptions = Object.assign({}, BarcodeScanner.DefaultOptions, options || {});
+    var scanOptions = Object.assign({}, barcodeScanner.DefaultOptions, options || {});
     
     // Ensure barcodeFormats is properly merged
     if (options && options.barcodeFormats) {
-        scanOptions.barcodeFormats = Object.assign({}, BarcodeScanner.DefaultOptions.barcodeFormats, options.barcodeFormats);
+        scanOptions.barcodeFormats = Object.assign({}, barcodeScanner.DefaultOptions.barcodeFormats, options.barcodeFormats);
     }
     
-    exec(successCallback, errorCallback, 'BarcodeScanner', 'scan', [scanOptions]);
-};
-
-/**
- * Initialize the barcode scanner
- * @param {string} license - License key (optional for basic functionality)
- * @param {Function} successCallback - Success callback function
- * @param {Function} errorCallback - Error callback function
- */
-BarcodeScanner.init = function(license, successCallback, errorCallback) {
-    exec(successCallback, errorCallback, 'BarcodeScanner', 'init', [license || '']);
+    exec(successCallback, errorCallback, "BarcodeScanner", "scan", [scanOptions]);
 };
 
 /**
@@ -137,9 +167,9 @@ BarcodeScanner.init = function(license, successCallback, errorCallback) {
  * @param {Function} successCallback - Success callback function
  * @param {Function} errorCallback - Error callback function
  */
-BarcodeScanner.decode = function(base64Data, options, successCallback, errorCallback) {
-    var decodeOptions = Object.assign({}, BarcodeScanner.DefaultOptions, options || {});
-    exec(successCallback, errorCallback, 'BarcodeScanner', 'decode', [base64Data, decodeOptions]);
+barcodeScanner.decode = function(base64Data, options, successCallback, errorCallback) {
+    var decodeOptions = Object.assign({}, barcodeScanner.DefaultOptions, options || {});
+    exec(successCallback, errorCallback, "BarcodeScanner", "decode", [base64Data, decodeOptions]);
 };
 
 /**
@@ -148,15 +178,15 @@ BarcodeScanner.decode = function(base64Data, options, successCallback, errorCall
  * @param {Function} onScanned - Callback function called when barcode is detected
  * @param {Function} errorCallback - Error callback function
  */
-BarcodeScanner.startScanning = function(options, onScanned, errorCallback) {
-    var scanOptions = Object.assign({}, BarcodeScanner.DefaultOptions, options || {});
+barcodeScanner.startScanning = function(options, onScanned, errorCallback) {
+    var scanOptions = Object.assign({}, barcodeScanner.DefaultOptions, options || {});
     
     // Ensure barcodeFormats is properly merged
     if (options && options.barcodeFormats) {
-        scanOptions.barcodeFormats = Object.assign({}, BarcodeScanner.DefaultOptions.barcodeFormats, options.barcodeFormats);
+        scanOptions.barcodeFormats = Object.assign({}, barcodeScanner.DefaultOptions.barcodeFormats, options.barcodeFormats);
     }
     
-    exec(onScanned, errorCallback, 'BarcodeScanner', 'startScanning', [scanOptions]);
+    exec(onScanned, errorCallback, "BarcodeScanner", "startScanning", [scanOptions]);
 };
 
 /**
@@ -164,8 +194,8 @@ BarcodeScanner.startScanning = function(options, onScanned, errorCallback) {
  * @param {Function} successCallback - Success callback function
  * @param {Function} errorCallback - Error callback function
  */
-BarcodeScanner.stopScanning = function(successCallback, errorCallback) {
-    exec(successCallback, errorCallback, 'BarcodeScanner', 'stopScanning', []);
+barcodeScanner.stopScanning = function(successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "BarcodeScanner", "stopScanning", []);
 };
 
 /**
@@ -173,8 +203,8 @@ BarcodeScanner.stopScanning = function(successCallback, errorCallback) {
  * @param {Function} successCallback - Success callback function
  * @param {Function} errorCallback - Error callback function
  */
-BarcodeScanner.pauseScanning = function(successCallback, errorCallback) {
-    exec(successCallback, errorCallback, 'BarcodeScanner', 'pauseScanning', []);
+barcodeScanner.pauseScanning = function(successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "BarcodeScanner", "pauseScanning", []);
 };
 
 /**
@@ -182,8 +212,8 @@ BarcodeScanner.pauseScanning = function(successCallback, errorCallback) {
  * @param {Function} successCallback - Success callback function
  * @param {Function} errorCallback - Error callback function
  */
-BarcodeScanner.resumeScanning = function(successCallback, errorCallback) {
-    exec(successCallback, errorCallback, 'BarcodeScanner', 'resumeScanning', []);
+barcodeScanner.resumeScanning = function(successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "BarcodeScanner", "resumeScanning", []);
 };
 
 /**
@@ -192,8 +222,8 @@ BarcodeScanner.resumeScanning = function(successCallback, errorCallback) {
  * @param {Function} successCallback - Success callback function
  * @param {Function} errorCallback - Error callback function
  */
-BarcodeScanner.switchTorch = function(enabled, successCallback, errorCallback) {
-    exec(successCallback, errorCallback, 'BarcodeScanner', 'switchTorch', [enabled]);
+barcodeScanner.switchTorch = function(enabled, successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "BarcodeScanner", "switchTorch", [enabled]);
 };
 
 /**
@@ -202,8 +232,8 @@ BarcodeScanner.switchTorch = function(enabled, successCallback, errorCallback) {
  * @param {Function} successCallback - Success callback function
  * @param {Function} errorCallback - Error callback function
  */
-BarcodeScanner.setZoom = function(zoomFactor, successCallback, errorCallback) {
-    exec(successCallback, errorCallback, 'BarcodeScanner', 'setZoom', [zoomFactor]);
+barcodeScanner.setZoom = function(zoomFactor, successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "BarcodeScanner", "setZoom", [zoomFactor]);
 };
 
 /**
@@ -212,8 +242,8 @@ BarcodeScanner.setZoom = function(zoomFactor, successCallback, errorCallback) {
  * @param {Function} successCallback - Success callback function
  * @param {Function} errorCallback - Error callback function
  */
-BarcodeScanner.setFocus = function(point, successCallback, errorCallback) {
-    exec(successCallback, errorCallback, 'BarcodeScanner', 'setFocus', [point]);
+barcodeScanner.setFocus = function(point, successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "BarcodeScanner", "setFocus", [point]);
 };
 
 /**
@@ -221,8 +251,8 @@ BarcodeScanner.setFocus = function(point, successCallback, errorCallback) {
  * @param {Function} successCallback - Success callback function
  * @param {Function} errorCallback - Error callback function
  */
-BarcodeScanner.getResolution = function(successCallback, errorCallback) {
-    exec(successCallback, errorCallback, 'BarcodeScanner', 'getResolution', []);
+barcodeScanner.getResolution = function(successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "BarcodeScanner", "getResolution", []);
 };
 
 /**
@@ -230,8 +260,8 @@ BarcodeScanner.getResolution = function(successCallback, errorCallback) {
  * @param {Function} successCallback - Success callback function
  * @param {Function} errorCallback - Error callback function
  */
-BarcodeScanner.hasCamera = function(successCallback, errorCallback) {
-    exec(successCallback, errorCallback, 'BarcodeScanner', 'hasCamera', []);
+barcodeScanner.hasCamera = function(successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "BarcodeScanner", "hasCamera", []);
 };
 
 /**
@@ -239,8 +269,8 @@ BarcodeScanner.hasCamera = function(successCallback, errorCallback) {
  * @param {Function} successCallback - Success callback function
  * @param {Function} errorCallback - Error callback function
  */
-BarcodeScanner.requestPermissions = function(successCallback, errorCallback) {
-    exec(successCallback, errorCallback, 'BarcodeScanner', 'requestPermissions', []);
+barcodeScanner.requestPermissions = function(successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "BarcodeScanner", "requestPermissions", []);
 };
 
 /**
@@ -248,26 +278,17 @@ BarcodeScanner.requestPermissions = function(successCallback, errorCallback) {
  * @param {Function} successCallback - Success callback function
  * @param {Function} errorCallback - Error callback function
  */
-BarcodeScanner.checkPermissions = function(successCallback, errorCallback) {
-    exec(successCallback, errorCallback, 'BarcodeScanner', 'checkPermissions', []);
+barcodeScanner.checkPermissions = function(successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "BarcodeScanner", "checkPermissions", []);
 };
 
 /**
- * Destroy scanner instance
+ * Destroy the scanner instance
  * @param {Function} successCallback - Success callback function
  * @param {Function} errorCallback - Error callback function
  */
-BarcodeScanner.destroy = function(successCallback, errorCallback) {
-    exec(successCallback, errorCallback, 'BarcodeScanner', 'destroy', []);
+barcodeScanner.destroy = function(successCallback, errorCallback) {
+    exec(successCallback, errorCallback, "BarcodeScanner", "destroy", []);
 };
 
-// Export to cordova.plugins.mccbarcode.barcodeScanner
-if (typeof cordova !== 'undefined' && cordova.plugins) {
-    if (!cordova.plugins.mccbarcode) {
-        cordova.plugins.mccbarcode = {};
-    }
-    cordova.plugins.mccbarcode.barcodeScanner = BarcodeScanner;
-}
-
-// Also export as BarcodeScanner for backward compatibility
-module.exports = BarcodeScanner; 
+module.exports = barcodeScanner; 
