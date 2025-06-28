@@ -406,3 +406,39 @@ For issues and questions:
 - Real-time camera preview
 - Torch and zoom controls
 - Permission handling 
+
+### "FORMAT_GS1_DATABAR not found" Error
+
+**Solution**: This error occurs when trying to use GS1 DataBar format which is not supported in Google Play Services Vision API. The plugin has been updated to remove this format from the supported formats list.
+
+**Additional Methods**:
+
+```javascript
+// Toggle torch/flashlight
+navigator.barcodeScanner.switchTorch(enabled, successCallback, errorCallback)
+
+// Check camera permissions
+navigator.barcodeScanner.checkPermissions(successCallback, errorCallback)
+
+// Request camera permissions
+navigator.barcodeScanner.requestPermissions(successCallback, errorCallback)
+
+// Check if device has camera
+navigator.barcodeScanner.hasCamera(successCallback, errorCallback)
+```
+
+## Example
+
+See the `example/index.html` file for a complete working example with a user interface for testing different scanning options.
+
+## License
+
+MIT License - see LICENSE file for details.
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## Support
+
+For issues and questions, please use the GitHub issue tracker. 

@@ -1,239 +1,347 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Barcode Scanner Example</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
             background-color: #f5f5f5;
         }
         .container {
-            max-width: 600px;
-            margin: 0 auto;
             background: white;
-            padding: 20px;
+            padding: 30px;
             border-radius: 10px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
-        .button {
-            background-color: #007bff;
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        button {
+            background: #007bff;
             color: white;
-            padding: 12px 24px;
             border: none;
+            padding: 12px 20px;
             border-radius: 5px;
             cursor: pointer;
-            margin: 10px 5px;
-            font-size: 16px;
+            font-size: 14px;
+            transition: background 0.3s;
         }
-        .button:hover {
-            background-color: #0056b3;
+        button:hover {
+            background: #0056b3;
         }
-        .button:disabled {
-            background-color: #6c757d;
+        button:disabled {
+            background: #ccc;
             cursor: not-allowed;
         }
-        .result {
-            margin: 20px 0;
-            padding: 15px;
-            background-color: #f8f9fa;
+        .options-section {
+            background: #f8f9fa;
+            padding: 20px;
             border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .options-section h3 {
+            margin-top: 0;
+            color: #495057;
+        }
+        .format-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .format-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .format-item input[type="checkbox"] {
+            margin: 0;
+        }
+        .result-section {
+            background: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .result-section h3 {
+            margin-top: 0;
+            color: #495057;
+        }
+        #scanResult {
+            background: white;
+            padding: 10px;
+            border-radius: 3px;
             border-left: 4px solid #007bff;
+            white-space: pre-wrap;
+            font-family: monospace;
         }
-        .error {
-            border-left-color: #dc3545;
-            background-color: #f8d7da;
-        }
-        .success {
-            border-left-color: #28a745;
-            background-color: #d4edda;
-        }
-        .format-selector {
-            margin: 15px 0;
-            padding: 15px;
-            background-color: #e9ecef;
+        .status {
+            padding: 10px;
             border-radius: 5px;
+            margin-bottom: 15px;
         }
-        .format-group {
-            margin: 10px 0;
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
         }
-        .format-group label {
-            display: inline-block;
-            width: 120px;
-            margin: 5px 0;
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
         }
-        .options-group {
-            margin: 15px 0;
-            padding: 15px;
-            background-color: #f8f9fa;
-            border-radius: 5px;
-        }
-        .options-group label {
-            display: inline-block;
-            width: 150px;
-            margin: 5px 0;
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Barcode Scanner Example</h1>
-        <p>This example demonstrates the modern API for the barcode scanner plugin.</p>
-
-        <div class="format-selector">
-            <h3>Barcode Formats</h3>
-            <div class="format-group">
-                <h4>1D Formats</h4>
-                <label><input type="checkbox" id="Code128" checked> Code 128</label>
-                <label><input type="checkbox" id="Code39" checked> Code 39</label>
-                <label><input type="checkbox" id="Code93" checked> Code 93</label>
-                <label><input type="checkbox" id="CodaBar" checked> CodaBar</label>
-                <label><input type="checkbox" id="EAN13" checked> EAN-13</label>
-                <label><input type="checkbox" id="EAN8" checked> EAN-8</label>
-                <label><input type="checkbox" id="UPCA" checked> UPC-A</label>
-                <label><input type="checkbox" id="UPCE" checked> UPC-E</label>
-                <label><input type="checkbox" id="ITF" checked> ITF</label>
-            </div>
-            <div class="format-group">
-                <h4>2D Formats</h4>
-                <label><input type="checkbox" id="QRCode" checked> QR Code</label>
-                <label><input type="checkbox" id="DataMatrix" checked> Data Matrix</label>
-                <label><input type="checkbox" id="PDF417" checked> PDF417</label>
-                <label><input type="checkbox" id="Aztec" checked> Aztec</label>
-            </div>
+        <h1>Barcode Scanner Plugin Example</h1>
+        
+        <div id="status" class="status info">
+            Initializing barcode scanner...
         </div>
-
-        <div class="options-group">
+        
+        <div class="options-section">
             <h3>Scanning Options</h3>
-            <label><input type="checkbox" id="beepOnSuccess"> Beep on Success</label>
-            <label><input type="checkbox" id="vibrateOnSuccess"> Vibrate on Success</label>
-            <label><input type="checkbox" id="torch"> Enable Torch</label>
-            <label><input type="checkbox" id="rotateCamera"> Rotate Camera</label>
-            <br>
-            <label>Detector Size: <input type="range" id="detectorSize" min="0.3" max="1.0" step="0.1" value="0.6"> <span id="detectorSizeValue">0.6</span></label>
-            <br>
-            <label>Resolution: 
-                <select id="resolution">
-                    <option value="AUTO">Auto</option>
-                    <option value="480P">480P</option>
-                    <option value="720P">720P</option>
-                    <option value="1080P">1080P</option>
-                    <option value="2K">2K</option>
-                    <option value="4K">4K</option>
-                </select>
-            </label>
+            
+            <div class="format-grid">
+                <div class="format-item">
+                    <input type="checkbox" id="dataMatrix" checked>
+                    <label for="dataMatrix">Data Matrix</label>
+                </div>
+                <div class="format-item">
+                    <input type="checkbox" id="qrCode" checked>
+                    <label for="qrCode">QR Code</label>
+                </div>
+                <div class="format-item">
+                    <input type="checkbox" id="code128" checked>
+                    <label for="code128">Code 128</label>
+                </div>
+                <div class="format-item">
+                    <input type="checkbox" id="code39" checked>
+                    <label for="code39">Code 39</label>
+                </div>
+                <div class="format-item">
+                    <input type="checkbox" id="ean13" checked>
+                    <label for="ean13">EAN-13</label>
+                </div>
+                <div class="format-item">
+                    <input type="checkbox" id="ean8" checked>
+                    <label for="ean8">EAN-8</label>
+                </div>
+                <div class="format-item">
+                    <input type="checkbox" id="upca" checked>
+                    <label for="upca">UPC-A</label>
+                </div>
+                <div class="format-item">
+                    <input type="checkbox" id="upce" checked>
+                    <label for="upce">UPC-E</label>
+                </div>
+                <div class="format-item">
+                    <input type="checkbox" id="pdf417" checked>
+                    <label for="pdf417">PDF417</label>
+                </div>
+                <div class="format-item">
+                    <input type="checkbox" id="aztec" checked>
+                    <label for="aztec">Aztec</label>
+                </div>
+                <div class="format-item">
+                    <input type="checkbox" id="codabar" checked>
+                    <label for="codabar">Codabar</label>
+                </div>
+                <div class="format-item">
+                    <input type="checkbox" id="itf" checked>
+                    <label for="itf">ITF</label>
+                </div>
+            </div>
+            
+            <div style="margin-top: 15px;">
+                <label>
+                    <input type="checkbox" id="beepOnSuccess" checked>
+                    Beep on success
+                </label>
+            </div>
+            <div style="margin-top: 10px;">
+                <label>
+                    <input type="checkbox" id="vibrateOnSuccess" checked>
+                    Vibrate on success
+                </label>
+            </div>
+            <div style="margin-top: 10px;">
+                <label>
+                    <input type="checkbox" id="torch">
+                    Enable torch
+                </label>
+            </div>
         </div>
-
-        <button class="button" onclick="scanBarcode()">Scan Barcode</button>
-        <button class="button" onclick="startContinuousScan()">Start Continuous Scan</button>
-        <button class="button" onclick="stopContinuousScan()">Stop Continuous Scan</button>
-        <button class="button" onclick="checkPermissions()">Check Permissions</button>
-
-        <div id="result"></div>
+        
+        <div class="button-group">
+            <button id="initBtn" onclick="initializeScanner()">Initialize Scanner</button>
+            <button id="scanBtn" onclick="startScan()" disabled>Start Scan</button>
+            <button id="decodeBtn" onclick="decodeImage()" disabled>Decode Image</button>
+            <button id="torchBtn" onclick="toggleTorch()" disabled>Toggle Torch</button>
+            <button id="checkPermBtn" onclick="checkPermissions()">Check Permissions</button>
+        </div>
+        
+        <div class="result-section">
+            <h3>Scan Results</h3>
+            <div id="scanResult">No scan results yet...</div>
+        </div>
     </div>
 
     <script>
-        // Initialize the scanner when the page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            cordova.plugins.mccbarcode.barcodeScanner.init('', function() {
-                console.log('Scanner initialized');
-                showResult('Scanner initialized successfully', 'success');
-            }, function(error) {
-                console.error('Initialization failed:', error);
-                showResult('Initialization failed: ' + error, 'error');
-            });
-        });
-
-        // Update detector size display
-        document.getElementById('detectorSize').addEventListener('input', function() {
-            document.getElementById('detectorSizeValue').textContent = this.value;
-        });
-
-        function getScanOptions() {
-            const barcodeFormats = {};
+        // Wait for Cordova to load
+        document.addEventListener('deviceready', onDeviceReady, false);
+        
+        function onDeviceReady() {
+            console.log('Cordova is ready!');
+            updateStatus('Cordova is ready. Initializing barcode scanner...', 'info');
             
-            // Get selected formats
-            const formatCheckboxes = document.querySelectorAll('.format-selector input[type="checkbox"]');
-            formatCheckboxes.forEach(checkbox => {
-                barcodeFormats[checkbox.id] = checkbox.checked;
-            });
-
-            return {
-                barcodeFormats: barcodeFormats,
+            // Initialize the barcode scanner
+            initializeScanner();
+        }
+        
+        function updateStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('status');
+            statusDiv.textContent = message;
+            statusDiv.className = `status ${type}`;
+        }
+        
+        function updateResult(result) {
+            const resultDiv = document.getElementById('scanResult');
+            resultDiv.textContent = JSON.stringify(result, null, 2);
+        }
+        
+        function getScanOptions() {
+            const options = {
+                barcodeFormats: {
+                    DataMatrix: document.getElementById('dataMatrix').checked,
+                    QRCode: document.getElementById('qrCode').checked,
+                    Code128: document.getElementById('code128').checked,
+                    Code39: document.getElementById('code39').checked,
+                    EAN13: document.getElementById('ean13').checked,
+                    EAN8: document.getElementById('ean8').checked,
+                    UPCA: document.getElementById('upca').checked,
+                    UPCE: document.getElementById('upce').checked,
+                    PDF417: document.getElementById('pdf417').checked,
+                    Aztec: document.getElementById('aztec').checked,
+                    CodaBar: document.getElementById('codabar').checked,
+                    ITF: document.getElementById('itf').checked
+                },
                 beepOnSuccess: document.getElementById('beepOnSuccess').checked,
                 vibrateOnSuccess: document.getElementById('vibrateOnSuccess').checked,
                 torch: document.getElementById('torch').checked,
-                rotateCamera: document.getElementById('rotateCamera').checked,
-                detectorSize: parseFloat(document.getElementById('detectorSize').value),
-                resolution: document.getElementById('resolution').value
+                detectorSize: 0.6,
+                rotateCamera: false,
+                resolution: 'AUTO',
+                timeout: 30000
             };
+            return options;
         }
-
-        function scanBarcode() {
+        
+        function initializeScanner() {
+            updateStatus('Initializing barcode scanner...', 'info');
+            
+            if (typeof navigator.barcodeScanner === 'undefined') {
+                updateStatus('Barcode scanner plugin not found!', 'error');
+                return;
+            }
+            
+            navigator.barcodeScanner.init('', 
+                function(success) {
+                    updateStatus('Barcode scanner initialized successfully!', 'success');
+                    document.getElementById('scanBtn').disabled = false;
+                    document.getElementById('decodeBtn').disabled = false;
+                    document.getElementById('torchBtn').disabled = false;
+                },
+                function(error) {
+                    updateStatus('Failed to initialize barcode scanner: ' + error, 'error');
+                }
+            );
+        }
+        
+        function startScan() {
+            updateStatus('Starting scan...', 'info');
+            
             const options = getScanOptions();
-            console.log('Scanning with options:', options);
-
-            cordova.plugins.mccbarcode.barcodeScanner.scan(
-                options,
+            
+            navigator.barcodeScanner.scan(options,
                 function(result) {
-                    console.log('Scan result:', result);
-                    showResult(`Barcode detected: ${result.text}<br>Format: ${result.format}`, 'success');
+                    updateStatus('Scan completed successfully!', 'success');
+                    updateResult(result);
                 },
                 function(error) {
-                    console.error('Scan failed:', error);
-                    showResult('Scan failed: ' + error, 'error');
+                    updateStatus('Scan failed: ' + error, 'error');
                 }
             );
         }
-
-        function startContinuousScan() {
-            const options = getScanOptions();
-            console.log('Starting continuous scan with options:', options);
-
-            cordova.plugins.mccbarcode.barcodeScanner.startScanning(
-                options,
-                function(result) {
-                    console.log('Continuous scan result:', result);
-                    showResult(`Continuous scan: ${result.text} (${result.format})`, 'success');
+        
+        function decodeImage() {
+            updateStatus('Decode image not implemented in this example', 'info');
+            // This would typically take a base64 image and decode it
+            // navigator.barcodeScanner.decode(base64Data, options, successCallback, errorCallback);
+        }
+        
+        function toggleTorch() {
+            const torchEnabled = document.getElementById('torch').checked;
+            
+            navigator.barcodeScanner.switchTorch(!torchEnabled,
+                function(success) {
+                    document.getElementById('torch').checked = !torchEnabled;
+                    updateStatus('Torch toggled successfully', 'success');
                 },
                 function(error) {
-                    console.error('Continuous scan failed:', error);
-                    showResult('Continuous scan failed: ' + error, 'error');
+                    updateStatus('Failed to toggle torch: ' + error, 'error');
                 }
             );
         }
-
-        function stopContinuousScan() {
-            cordova.plugins.mccbarcode.barcodeScanner.stopScanning(
-                function() {
-                    showResult('Continuous scanning stopped', 'success');
-                },
-                function(error) {
-                    showResult('Error stopping scan: ' + error, 'error');
-                }
-            );
-        }
-
+        
         function checkPermissions() {
-            cordova.plugins.mccbarcode.barcodeScanner.checkPermissions(
+            if (typeof navigator.barcodeScanner === 'undefined') {
+                updateStatus('Barcode scanner plugin not found!', 'error');
+                return;
+            }
+            
+            navigator.barcodeScanner.checkPermissions(
                 function(hasPermission) {
                     if (hasPermission) {
-                        showResult('Camera permission granted', 'success');
+                        updateStatus('Camera permission granted', 'success');
                     } else {
-                        showResult('Camera permission denied', 'error');
+                        updateStatus('Camera permission not granted', 'error');
                     }
                 },
                 function(error) {
-                    showResult('Permission check failed: ' + error, 'error');
+                    updateStatus('Error checking permissions: ' + error, 'error');
                 }
             );
         }
-
-        function showResult(message, type) {
-            const resultDiv = document.getElementById('result');
-            resultDiv.innerHTML = `<div class="result ${type}">${message}</div>`;
+        
+        // Fallback for testing in browser
+        if (typeof cordova === 'undefined') {
+            console.log('Running in browser - simulating Cordova');
+            updateStatus('Running in browser mode - some features may not work', 'info');
+            
+            // Simulate device ready after a short delay
+            setTimeout(() => {
+                onDeviceReady();
+            }, 1000);
         }
     </script>
 </body>

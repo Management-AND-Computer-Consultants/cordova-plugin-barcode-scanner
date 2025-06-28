@@ -4,8 +4,8 @@
     android:layout_height="match_parent"
     android:background="@android:color/black">
 
-    <!-- Camera Preview -->
-    <androidx.camera.view.PreviewView
+    <!-- Camera Preview using SurfaceView for CameraSource -->
+    <SurfaceView
         android:id="@+id/preview_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

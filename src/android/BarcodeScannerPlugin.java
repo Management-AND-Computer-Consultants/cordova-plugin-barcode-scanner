@@ -1,4 +1,4 @@
-package com.managementandcomputerconsultants.barcodescanner;
+package com.mccbarcode;
 
 import android.Manifest;
 import android.content.Intent;
@@ -289,8 +289,8 @@ public class BarcodeScannerPlugin extends CordovaPlugin {
         if (requestCode == SCAN_REQUEST) {
             if (resultCode == cordova.getActivity().RESULT_OK && intent != null) {
                 try {
-                    String barcodeText = intent.getStringExtra("barcodeText");
-                    String barcodeFormat = intent.getStringExtra("barcodeFormat");
+                    String barcodeText = intent.getStringExtra("text");
+                    String barcodeFormat = intent.getStringExtra("format");
                     
                     JSONObject result = new JSONObject();
                     result.put("text", barcodeText);
