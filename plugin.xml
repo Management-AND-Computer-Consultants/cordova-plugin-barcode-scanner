@@ -2,7 +2,7 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
     xmlns:android="http://schemas.android.com/apk/res/android"
     id="management-and-computer-consultants-cordova-plugin-barcode-scanner"
-    version="1.0.6">
+    version="1.0.7">
     
     <name>Barcode Scanner</name>
     <description>A comprehensive barcode scanner plugin for Cordova supporting multiple 1D and 2D barcode formats</description>
@@ -46,7 +46,6 @@
         
         <source-file src="src/android/BarcodeScannerPlugin.java" target-dir="src/com/mccbarcode" />
         <source-file src="src/android/BarcodeScannerActivity.java" target-dir="src/com/mccbarcode" />
-        <source-file src="src/android/res/layout/activity_barcode_scanner.xml" target-dir="res/layout" />
         
         <!-- Use basic Android dependencies that are more likely to be available -->
         <framework src="androidx.core:core:1.6.0" />

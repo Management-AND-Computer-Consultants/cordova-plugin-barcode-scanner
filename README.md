@@ -337,28 +337,20 @@ cordova run android
 
 ### Common Issues
 
-1. **Plugin not found**
-   - Ensure you're using the correct plugin ID: `management-and-computer-consultants-cordova-plugin-barcode-scanner`
-   - Check that the plugin is properly installed with `cordova plugin list`
+1. **"FORMAT_GS1_DATABAR not found" Error**
+   - **Solution**: This error occurs when trying to use GS1 DataBar format which is not supported in Google Play Services Vision API. The plugin has been updated to remove this format from the supported formats list.
 
-2. **Camera Permission Denied**
-   - Ensure the app has camera permissions
-   - Use `navigator.barcodeScanner.requestPermissions()` to request permissions
+2. **"package R does not exist" Error**
+   - **Solution**: This error occurs when the Android R class (containing resource references) is not generated properly. The plugin now uses programmatic layout creation to avoid this issue entirely.
 
-3. **Scanner Not Initialized**
-   - Call `navigator.barcodeScanner.init()` before scanning
-   - Check for initialization errors
+3. **Camera Permission Denied**
+   - **Solution**: Ensure your app requests camera permissions. The plugin handles this automatically on Android.
 
-4. **No Barcode Detected**
-   - Ensure the barcode is clearly visible
-   - Try different lighting conditions
-   - Use torch if available
-   - Check if the barcode format is supported
+4. **Scanner Not Initializing**
+   - **Solution**: Make sure you're calling `init()` before using other methods.
 
-5. **Build Errors**
-   - Ensure Android SDK is properly configured
-   - Check that all dependencies are properly configured
-   - Verify Cordova and platform versions
+5. **No Barcode Detected**
+   - **Solution**: Check that the barcode format is enabled in your options and that the barcode is clearly visible to the camera.
 
 ### Debug Mode
 

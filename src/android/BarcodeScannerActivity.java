@@ -11,6 +11,9 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -63,13 +66,9 @@ public class BarcodeScannerActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_barcode_scanner);
         
-        // Initialize views
-        previewView = findViewById(R.id.preview_view);
-        overlayView = findViewById(R.id.overlay_view);
-        torchButton = findViewById(R.id.torch_button);
-        closeButton = findViewById(R.id.close_button);
+        // Create layout programmatically to avoid R class issues
+        createLayout();
         
         // Parse options from intent
         Intent intent = getIntent();
@@ -109,6 +108,119 @@ public class BarcodeScannerActivity extends AppCompatActivity {
         } else {
             ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS);
         }
+    }
+    
+    private void createLayout() {
+        // Create main layout
+        RelativeLayout mainLayout = new RelativeLayout(this);
+        mainLayout.setLayoutParams(new RelativeLayout.LayoutParams(
+            RelativeLayout.LayoutParams.MATCH_PARENT,
+            RelativeLayout.LayoutParams.MATCH_PARENT));
+        mainLayout.setBackgroundColor(android.graphics.Color.BLACK);
+        
+        // Create SurfaceView for camera preview
+        previewView = new SurfaceView(this);
+        previewView.setId(android.view.View.generateViewId());
+        RelativeLayout.LayoutParams previewParams = new RelativeLayout.LayoutParams(
+            RelativeLayout.LayoutParams.MATCH_PARENT,
+            RelativeLayout.LayoutParams.MATCH_PARENT);
+        previewView.setLayoutParams(previewParams);
+        mainLayout.addView(previewView);
+        
+        // Create overlay view
+        overlayView = new FrameLayout(this);
+        overlayView.setId(android.view.View.generateViewId());
+        RelativeLayout.LayoutParams overlayParams = new RelativeLayout.LayoutParams(
+            RelativeLayout.LayoutParams.MATCH_PARENT,
+            RelativeLayout.LayoutParams.MATCH_PARENT);
+        overlayView.setLayoutParams(overlayParams);
+        mainLayout.addView(overlayView);
+        
+        // Create top toolbar
+        LinearLayout topToolbar = new LinearLayout(this);
+        topToolbar.setId(android.view.View.generateViewId());
+        topToolbar.setOrientation(LinearLayout.HORIZONTAL);
+        topToolbar.setBackgroundColor(0x80000000); // Semi-transparent black
+        topToolbar.setPadding(50, 50, 50, 50);
+        
+        RelativeLayout.LayoutParams toolbarParams = new RelativeLayout.LayoutParams(
+            RelativeLayout.LayoutParams.MATCH_PARENT,
+            RelativeLayout.LayoutParams.WRAP_CONTENT);
+        toolbarParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+        topToolbar.setLayoutParams(toolbarParams);
+        
+        // Create close button
+        closeButton = new Button(this);
+        closeButton.setText("✕");
+        closeButton.setTextColor(android.graphics.Color.WHITE);
+        closeButton.setTextSize(20);
+        closeButton.setBackgroundColor(android.graphics.Color.TRANSPARENT);
+        closeButton.setLayoutParams(new LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT));
+        topToolbar.addView(closeButton);
+        
+        // Create title
+        TextView titleText = new TextView(this);
+        titleText.setText("Scan Barcode");
+        titleText.setTextColor(android.graphics.Color.WHITE);
+        titleText.setTextSize(18);
+        titleText.setTypeface(null, android.graphics.Typeface.BOLD);
+        titleText.setGravity(android.view.Gravity.CENTER);
+        
+        LinearLayout.LayoutParams titleParams = new LinearLayout.LayoutParams(
+            0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f);
+        titleText.setLayoutParams(titleParams);
+        topToolbar.addView(titleText);
+        
+        // Create torch button
+        torchButton = new Button(this);
+        torchButton.setText("Torch ON");
+        torchButton.setTextColor(android.graphics.Color.WHITE);
+        torchButton.setBackgroundColor(android.graphics.Color.TRANSPARENT);
+        torchButton.setLayoutParams(new LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT));
+        topToolbar.addView(torchButton);
+        
+        mainLayout.addView(topToolbar);
+        
+        // Create bottom instructions
+        LinearLayout bottomLayout = new LinearLayout(this);
+        bottomLayout.setOrientation(LinearLayout.VERTICAL);
+        bottomLayout.setBackgroundColor(0x80000000);
+        bottomLayout.setPadding(50, 50, 50, 50);
+        
+        RelativeLayout.LayoutParams bottomParams = new RelativeLayout.LayoutParams(
+            RelativeLayout.LayoutParams.MATCH_PARENT,
+            RelativeLayout.LayoutParams.WRAP_CONTENT);
+        bottomParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        bottomLayout.setLayoutParams(bottomParams);
+        
+        TextView instructionText = new TextView(this);
+        instructionText.setText("Position the barcode within the frame");
+        instructionText.setTextColor(android.graphics.Color.WHITE);
+        instructionText.setTextSize(16);
+        instructionText.setGravity(android.view.Gravity.CENTER);
+        instructionText.setLayoutParams(new LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT));
+        bottomLayout.addView(instructionText);
+        
+        TextView subText = new TextView(this);
+        subText.setText("The scanner will automatically detect and read the barcode");
+        subText.setTextColor(0xFFCCCCCC);
+        subText.setTextSize(14);
+        subText.setGravity(android.view.Gravity.CENTER);
+        subText.setLayoutParams(new LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT));
+        bottomLayout.addView(subText);
+        
+        mainLayout.addView(bottomLayout);
+        
+        // Set the main layout as content view
+        setContentView(mainLayout);
     }
     
     private void setupDefaultFormats() {
