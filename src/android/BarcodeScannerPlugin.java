@@ -217,7 +217,14 @@ public class BarcodeScannerPlugin extends CordovaPlugin {
     
     private boolean hasCamera(CallbackContext callbackContext) {
         boolean hasCamera = cordova.getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
-        callbackContext.success(hasCamera);
+        try {
+            JSONObject result = new JSONObject();
+            result.put("hasCamera", hasCamera);
+            callbackContext.success(result);
+        } catch (JSONException e) {
+            Log.e(TAG, "Error creating hasCamera result", e);
+            callbackContext.error("Error checking camera availability");
+        }
         return true;
     }
     
@@ -233,7 +240,14 @@ public class BarcodeScannerPlugin extends CordovaPlugin {
     
     private boolean checkPermissions(CallbackContext callbackContext) {
         boolean hasPermission = checkCameraPermission();
-        callbackContext.success(hasPermission);
+        try {
+            JSONObject result = new JSONObject();
+            result.put("hasPermission", hasPermission);
+            callbackContext.success(result);
+        } catch (JSONException e) {
+            Log.e(TAG, "Error creating permissions result", e);
+            callbackContext.error("Error checking permissions");
+        }
         return true;
     }
     

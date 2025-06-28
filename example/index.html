@@ -320,8 +320,8 @@
             }
             
             navigator.barcodeScanner.checkPermissions(
-                function(hasPermission) {
-                    if (hasPermission) {
+                function(result) {
+                    if (result.hasPermission) {
                         updateStatus('Camera permission granted', 'success');
                     } else {
                         updateStatus('Camera permission not granted', 'error');
