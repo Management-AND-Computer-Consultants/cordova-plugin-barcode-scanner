@@ -2,7 +2,7 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
     xmlns:android="http://schemas.android.com/apk/res/android"
     id="management-and-computer-consultants-cordova-plugin-barcode-scanner"
-    version="1.0.8">
+    version="1.0.9">
     
     <name>Barcode Scanner</name>
     <description>A comprehensive barcode scanner plugin for Cordova supporting multiple 1D and 2D barcode formats</description>
