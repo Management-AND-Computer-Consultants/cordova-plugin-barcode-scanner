@@ -434,3 +434,252 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ## Support
 
 For issues and questions, please use the GitHub issue tracker. 
+
+
+## Plugin Usage 
+
+in app.js
+
+      BarcodeScannerService.init().then(function() {
+        console.log('Scanner service initialized');
+      }, function(error) {
+          console.error('Service initialization failed:', error);
+      });
+
+in barcodeScan.service.js
+
+angular.module('barcodeScan.services', [])
+    .service('BarcodeScannerService', function($q, $ionicPopup) {
+        
+        var service = {};
+        var scannerInitialized = false;
+        
+        service.init = function() {
+            var deferred = $q.defer();
+            
+            if (typeof navigator !== 'undefined' && navigator.barcodeScanner) {
+                navigator.barcodeScanner.init('', function() {
+                    scannerInitialized = true;
+                    deferred.resolve();
+                }, function(error) {
+                    deferred.reject(error);
+                });
+            } else {
+                deferred.reject('Barcode scanner plugin not available');
+            }
+            
+            return deferred.promise;
+        };
+        
+        service.scan = function(options) {
+            var deferred = $q.defer();
+            
+            if (!scannerInitialized) {
+                deferred.reject('Scanner not initialized');
+                return deferred.promise;
+            }
+            
+            var defaultOptions = {
+                barcodeFormats: {
+                    Code128: true,
+                    Code39: true,
+                    QRCode: true,
+                    DataMatrix: true,
+                    EAN13: true,
+                    EAN8: true,
+                    UPCA: true,
+                    UPCE: true,
+                    PDF417: true,
+                    Aztec: true
+                },
+                beepOnSuccess: true,
+                vibrateOnSuccess: true,
+                detectorSize: 0.6,
+                torch: false,
+                resolution: 'AUTO',
+                timeout: 30000
+            };
+            
+            var scanOptions = angular.extend(defaultOptions, options || {});
+            
+            navigator.barcodeScanner.scan(
+                scanOptions,
+                function(result) {
+                    deferred.resolve(result);
+                },
+                function(error) {
+                    deferred.reject(error);
+                }
+            );
+            
+            return deferred.promise;
+        };
+        
+        service.scanQRCode = function() {
+            return this.scan({
+                barcodeFormats: {
+                    QRCode: true,
+                    DataMatrix: true
+                }
+            });
+        };
+        
+        service.scanRetailBarcode = function() {
+            return this.scan({
+                barcodeFormats: {
+                    EAN13: true,
+                    EAN8: true,
+                    UPCA: true,
+                    UPCE: true
+                },
+                torch: true
+            });
+        };
+        
+        service.startContinuousScanning = function(options, onScanned) {
+            var deferred = $q.defer();
+            
+            if (!scannerInitialized) {
+                deferred.reject('Scanner not initialized');
+                return deferred.promise;
+            }
+            
+            var defaultOptions = {
+                barcodeFormats: {
+                    Code128: true,
+                    Code39: true,
+                    QRCode: true,
+                    DataMatrix: true
+                },
+                vibrateOnSuccess: true
+            };
+            
+            var scanOptions = angular.extend(defaultOptions, options || {});
+            
+            navigator.barcodeScanner.startScanning(
+                scanOptions,
+                function(result) {
+                    if (onScanned) {
+                        onScanned(result);
+                    }
+                },
+                function(error) {
+                    deferred.reject(error);
+                }
+            );
+            
+            return deferred.promise;
+        };
+        
+        service.stopContinuousScanning = function() {
+            var deferred = $q.defer();
+            
+            navigator.barcodeScanner.stopScanning(function() {
+                deferred.resolve();
+            }, function(error) {
+                deferred.reject(error);
+            });
+            
+            return deferred.promise;
+        };
+        
+        service.switchTorch = function(enabled) {
+            var deferred = $q.defer();
+            
+            navigator.barcodeScanner.switchTorch(enabled, function() {
+                deferred.resolve();
+            }, function(error) {
+                deferred.reject(error);
+            });
+            
+            return deferred.promise;
+        };
+        
+        service.setZoom = function(zoomFactor) {
+            var deferred = $q.defer();
+            
+            navigator.barcodeScanner.setZoom(zoomFactor, function() {
+                deferred.resolve();
+            }, function(error) {
+                deferred.reject(error);
+            });
+            
+            return deferred.promise;
+        };
+        
+        service.checkPermissions = function() {
+            var deferred = $q.defer();
+            
+            navigator.barcodeScanner.checkPermissions(function(hasPermission) {
+                deferred.resolve(hasPermission);
+            }, function(error) {
+                deferred.reject(error);
+            });
+            
+            return deferred.promise;
+        };
+        
+        service.requestPermissions = function() {
+            var deferred = $q.defer();
+            
+            navigator.barcodeScanner.requestPermissions(function() {
+                deferred.resolve();
+            }, function(error) {
+                deferred.reject(error);
+            });
+            
+            return deferred.promise;
+        };
+        
+        service.hasCamera = function() {
+            var deferred = $q.defer();
+            
+            navigator.barcodeScanner.hasCamera(function(hasCamera) {
+                deferred.resolve(hasCamera);
+            }, function(error) {
+                deferred.reject(error);
+            });
+            
+            return deferred.promise;
+        };
+        
+        service.destroy = function() {
+            var deferred = $q.defer();
+            
+            if (navigator.barcodeScanner) {
+                navigator.barcodeScanner.destroy(function() {
+                    scannerInitialized = false;
+                    deferred.resolve();
+                }, function(error) {
+                    deferred.reject(error);
+                });
+            } else {
+                deferred.resolve();
+            }
+            
+            return deferred.promise;
+        };
+        
+        return service;
+    });
+
+------------------ Use this code for SCANNING ----------------------------
+
+in the controller file 
+
+        $scope.openScanner = function () {
+            // Check and request camera permissions first
+            // setTimeout(function() {
+            //     startDynamsoftScanner();
+            // }, 3000);
+            console.log("openScanner");
+            BarcodeScannerService.scanQRCode().then(function(result) {
+                console.log('QR Code:', result.text);
+                // Handle QR code result
+            }, function(error) {
+                console.error('QR scan failed:', error);
+            });
+
+        }
+
+------------------ Use this code for SCANNING ----------------------------
